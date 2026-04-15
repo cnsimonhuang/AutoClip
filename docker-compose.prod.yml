@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  autoclip:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: autoclip-prod
+    ports:
+      - "80:8000"  # 生产环境使用80端口
+    environment:
+      # API配置
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY}
+      - SILICONFLOW_API_KEY=${SILICONFLOW_API_KEY}
+      - API_PROVIDER=${API_PROVIDER:-dashscope}
+      - MODEL_NAME=${MODEL_NAME:-qwen-plus}
+      - SILICONFLOW_MODEL=${SILICONFLOW_MODEL:-Qwen/Qwen2.5-72B-Instruct}
+      
+      # 处理参数
+      - CHUNK_SIZE=${CHUNK_SIZE:-5000}
+      - MIN_SCORE_THRESHOLD=${MIN_SCORE_THRESHOLD:-0.7}
+      - MAX_CLIPS_PER_COLLECTION=${MAX_CLIPS_PER_COLLECTION:-5}
+      
+      # 服务器配置
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=false
+      
+    volumes:
+      # 数据持久化
+      - ./uploads:/app/uploads
+      - ./output:/app/output
+      - ./data:/app/data
+      - ./input:/app/input
+      
+      # 配置文件挂载
+      - ./data/settings.json:/app/data/settings.json:ro
+      
+    restart: always  # 生产环境自动重启
+    
+    # 生产环境资源限制
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # 生产环境日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  default:
+    name: autoclip-prod-network
