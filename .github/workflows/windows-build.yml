@@ -36,26 +36,9 @@ jobs:
     - name: Build Windows Portable
       run: npx electron-builder --win portable
     
-    - name: Build Windows NSIS Installer
-      run: npx electron-builder --win nsis
-    
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: AutoClip-Windows
         path: release/
         retention-days: 30
-    
-    - name: Create ZIP
-      run: |
-        Compress-Archive -Path release/* -DestinationPath AutoClip-Windows-Portable.zip
-    
-    - name: Upload Release Asset
-      if: github.event_name == 'release'
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          release/*.exe
-          release/*.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
