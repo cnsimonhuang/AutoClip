@@ -1,4 +1,4 @@
-# 核心依赖
+# Core dependencies
 fastapi==0.104.1
 uvicorn==0.24.0
 python-multipart==0.0.6
@@ -7,27 +7,27 @@ openai>=1.0.0
 pydub==0.25.1
 pysrt==1.1.2
 
-# 数据处理
+# Data processing
 pydantic==2.11.7
 python-dotenv==1.1.1
 
-# 文件处理
+# File processing
 aiofiles==23.2.1
 
-# 网络请求
+# Network requests
 requests==2.32.4
 aiohttp==3.12.13
 
-# 加密和安全
+# Cryptography and security
 cryptography==42.0.5
 
-# B站相关工具
+# Bilibili related tools
 yt-dlp>=2023.12.30
 
-# 测试依赖
+# Testing dependencies
 pytest==8.0.0
 pytest-cov==4.1.0
 pytest-mock==3.12.0
 
-# 开发工具
+# Development tools
 watchfiles==1.1.0
